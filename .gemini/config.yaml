@@ -1,0 +1,6 @@
+# Config for the VPA Autoscaling Repo Agent.
+have_fun: false
+code_review:
+  disable: false
+  comment_severity_threshold: 'HIGH'
+ignore_patterns: []

@@ -1,0 +1,19 @@
+description = "Analyze the Vertical Pod Autoscaler status and recommendations."
+prompt = """
+## Mission
+Analyze the current state of the Vertical Pod Autoscaler (VPA) in the cluster.
+
+## Objective
+Provide a clear summary of the VPA configuration, current recommendations, and any issues found in the detailed status.
+
+## Instructions
+1. **Check Metrics**: Verify if metrics-server is running.
+2. **Inspect VPA**: Retrieve and analyze the VPA object details.
+3. **Explain Recommendations**: Interpret the 'Target', 'LowerBound', and 'UpperBound' values for the user.
+
+## Constraints
+- Use `kubectl` tasks where possible.
+- Be concise.
+
+{{args}}
+"""

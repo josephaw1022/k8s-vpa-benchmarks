@@ -1,0 +1,36 @@
+version: '3'
+
+vars:
+  CLUSTER_NAME: vpa-poc
+
+includes:
+  example:
+    taskfile: ./example/Taskfile.yml
+    dir: ./example
+
+tasks:
+  default:
+    cmds:
+      - task --list-all
+
+  setup:
+    cmds:
+      - chmod +x setup.sh
+      - ./setup.sh {{.CLUSTER_NAME}}
+
+  cleanup:
+    cmds:
+      - kind delete cluster --name {{.CLUSTER_NAME}}
+
+  grafana-pass:
+    cmds:
+      - kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+  grafana-ui:
+    cmds:
+      - kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
+
+  run-experiment:
+    cmds:
+      - chmod +x run_experiment.sh
+      - ./run_experiment.sh

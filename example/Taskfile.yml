@@ -1,0 +1,42 @@
+version: '3'
+
+tasks:
+  create:
+    cmds:
+      - kubectl apply -f app.yaml
+
+  delete:
+    cmds:
+      - kubectl delete ns my-app
+
+  cpu-spike:
+    vars:
+      POD: $(kubectl get pods -n my-app -l app=my-app -o jsonpath="{.items[0].metadata.name}")
+    cmds:
+      - 'kubectl exec {{.POD}} -n my-app -- /bin/bash -c "while true; do : ; done" &'
+
+  mem-spike:
+    vars:
+      POD: $(kubectl get pods -n my-app -l app=my-app -o jsonpath="{.items[0].metadata.name}")
+    cmds:
+      - 'kubectl exec -it {{.POD}} -n my-app -- /bin/bash -c "dd if=/dev/zero of=/tmp/mem bs=1M count=100"'
+
+  restart:
+    cmds:
+      - kubectl rollout restart deployment/my-app-deployment -n my-app
+
+  describe-deployment:
+    cmds:
+      - kubectl describe deployment my-app-deployment -n my-app
+
+  describe-pod:
+    cmds:
+      - kubectl describe pod -n my-app -l app=my-app
+
+  describe-vpa:
+    cmds:
+      - kubectl describe vpa my-app-vpa -n my-app
+
+  watch-vpa:
+    cmds:
+      - kubectl get vpa my-app-vpa -n my-app --watch
